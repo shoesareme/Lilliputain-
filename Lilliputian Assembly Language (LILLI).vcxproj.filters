@@ -30,6 +30,7 @@
     <ClCompile Include="variable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tokenizer.h">

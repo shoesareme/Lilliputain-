@@ -6,15 +6,17 @@ int main(int argc, char* argv[])
 		exit(-1);
 
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL);
+	std::cin.tie(nullptr);
 
-	if (std::string(argv[1]) == "-r") {
+	if (std::string(argv[1]) == "-r") 
+	{
 		std::cout << "Lilliputain v1.0" << std::endl;
 		std::cout << "For more information, please go to: https://github.com/bootsareme/Lilliputain" << "\n\n";
 		std::ifstream src(argv[2]);
 		Tokenizer::parse(src);
 	}
-	else if (std::string(argv[1]) == "-h") {
+	else if (std::string(argv[1]) == "-h") 
+	{
 		std::cout << "| Opcode | Description |\n";
 		std::cout << "| SET X = Y | Creates a new variable called X and assigns it to Y. |\n";
 		std::cout << "| MOV X -> Y | Moves the value of X into Y. |\n";
