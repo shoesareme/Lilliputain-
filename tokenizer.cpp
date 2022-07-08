@@ -8,18 +8,14 @@ std::vector<std::string> Tokenizer::split(const std::string& str, const std::str
 	do 
 	{
 		pos = str.find(delim, prev);
-
 		if (pos == std::string::npos)
 			pos = str.length();
-		
 		std::string token = str.substr(prev, pos - prev);
-
-		if (!token.empty()) 
-			tokens.push_back(token);
-		
+		if (!token.empty())
+			tokens.emplace_back(token);
 		prev = pos + delim.length();
-
-	} while (pos < str.length() && prev < str.length());
+	}
+	while (pos < str.length() && prev < str.length());
 
 	return tokens;
 }
@@ -32,29 +28,29 @@ void Tokenizer::parse(std::ifstream& src)
 	
 	for (std::string instruction; std::getline(src, instruction);)
 	{
-		std::string pos1 = instruction.substr(0, instruction.find(" "));
+		std::string pos1 = instruction.substr(0, instruction.find(' '));
 		std::vector<std::string> token = split(instruction, " ");
 
 		if (token.size() > 1 && token.size() > 2 && token.size() > 3) {
-			opcodes.push_back(pos1);
-			arg1.push_back(token[1]);
-			arg2.push_back(token[3]);
-			operand.push_back(token[2]);
+			opcodes.emplace_back(pos1);
+			arg1.emplace_back(token[1]);
+			arg2.emplace_back(token[3]);
+			operand.emplace_back(token[2]);
 		} else if (token.size() > 1 && token.size() > 2) {
-			opcodes.push_back(pos1);
-			arg1.push_back(token[1]);
-			arg2.push_back("`");
-			operand.push_back(token[2]);
+			opcodes.emplace_back(pos1);
+			arg1.emplace_back(token[1]);
+			arg2.emplace_back("`");
+			operand.emplace_back(token[2]);
 		} else if (token.size() > 1) {
-			opcodes.push_back(pos1);
-			arg1.push_back(token[1]);
-			arg2.push_back("`");
-			operand.push_back("`");
+			opcodes.emplace_back(pos1);
+			arg1.emplace_back(token[1]);
+			arg2.emplace_back("`");
+			operand.emplace_back("`");
 		} else {
-			opcodes.push_back(pos1);
-			arg1.push_back("`");
-			arg2.push_back("`");
-			operand.push_back("`");
+			opcodes.emplace_back(pos1);
+			arg1.emplace_back("`");
+			arg2.emplace_back("`");
+			operand.emplace_back("`");
 		}
 	}
 	link(opcodes, arg1, operand, arg2);
@@ -72,8 +68,8 @@ void Tokenizer::link(std::vector<std::string> instruction, std::vector<std::stri
 			Opcode::move(arg1[i], modifier[i], arg2[i]);
 		else if (instruction[i] == "ARITH")
 			Opcode::add(arg1[i], modifier[i], arg2[i]);
-		else if (instruction[i] == "DWORD")
-			Opcode::dword(arg1[i], modifier[i], arg2[i]);
+		else if (instruction[i] == "STR")
+			Opcode::str(arg1[i], modifier[i], arg2[i]);
 		else if (instruction[i] == "PRINT")
 			Opcode::print(arg1[i], modifier[i], arg2[i]);
 		else if (instruction[i] == "DEL")
@@ -85,15 +81,13 @@ void Tokenizer::link(std::vector<std::string> instruction, std::vector<std::stri
 				lines = i + Opcode::conditional(arg1[i], modifier[i]);
 				goto _thread;
 			}
-			else continue;
 		}
 		else if (instruction[i] == "JMP") {
 			lines = stoi(arg1[i]);
 			goto _thread;
 		}
 	}
-
-	goto _end;
+	return;
 
 _thread:
 	for (int i = lines - 1; i < instruction.size(); i++) {
@@ -103,8 +97,8 @@ _thread:
 			Opcode::move(arg1[i], modifier[i], arg2[i]);
 		else if (instruction[i] == "ARITH")
 			Opcode::add(arg1[i], modifier[i], arg2[i]);
-		else if (instruction[i] == "DWORD")
-			Opcode::dword(arg1[i], modifier[i], arg2[i]);
+		else if (instruction[i] == "STR")
+			Opcode::str(arg1[i], modifier[i], arg2[i]);
 		else if (instruction[i] == "PRINT")
 			Opcode::print(arg1[i], modifier[i], arg2[i]);
 		else if (instruction[i] == "DEL")
@@ -116,14 +110,9 @@ _thread:
 				lines = i + Opcode::conditional(arg1[i], modifier[i]);
 				goto _thread;
 			}
-			else {
-				continue;
-			}
 		} else if (instruction[i] == "JMP") {
 			lines = stoi(arg1[i]);
 			goto _thread;
 		}
 	}
-_end:
-	exit(0);
 }

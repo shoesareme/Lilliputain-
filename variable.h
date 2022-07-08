@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 class Variable
 {
@@ -8,10 +9,10 @@ class Variable
 	int value;
 
 public:
-	Variable(std::string id, int val);
-	Variable();
-	std::string getName() const;
-	int getValue() const;
+	Variable() = default;
+	Variable(std::string id, int value) : name(std::move(id)), value(value) {}
+	[[nodiscard]] std::string getName() const;
+	[[nodiscard]] int getValue() const;
 	void setValue(int val);
 };
 

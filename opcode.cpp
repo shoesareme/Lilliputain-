@@ -1,7 +1,7 @@
 #include "opcode.h"
 
-std::map<std::string, Variable> stack;
-std::map<std::string, DWORD> dstack;
+std::map<std::string, Variable> varMap;
+std::map<std::string, STR> str_varMap;
 
 std::vector<std::string> split(const std::string& str, const std::string& delim)
 {
@@ -11,152 +11,148 @@ std::vector<std::string> split(const std::string& str, const std::string& delim)
 	do
 	{
 		pos = str.find(delim, prev);
-
 		if (pos == std::string::npos)
 			pos = str.length();
-
 		std::string token = str.substr(prev, pos - prev);
-
 		if (!token.empty())
 			tokens.push_back(token);
-
 		prev = pos + delim.length();
-
-	} while (pos < str.length() && prev < str.length());
+	}
+	while (pos < str.length() && prev < str.length());
 
 	return tokens;
 }
 
-void Opcode::set(std::string operand1, std::string modifier, std::string operand2)
+void Opcode::set(std::string operand1, const std::string& modifier, const std::string& operand2)
 {
 	if (modifier != "=")
-		exit(-1);
+		return;
 
-	Variable var = Variable(operand1, stoi(operand2));
-	stack.insert({ var.getName(), var });
+	Variable var = Variable(std::move(operand1), stoi(operand2));
+	varMap.insert({ var.getName(), var });
 }
 
-void Opcode::move(std::string operand1, std::string modifier, std::string operand2)
+void Opcode::move(const std::string& operand1, const std::string& modifier, const std::string& operand2)
 {
 	if (modifier != "->")
-		exit(-1);
+		return;
 
 	if (operand2 == "STDOUT") {
-		Variable var = stack[operand1];
+		const Variable var = varMap[operand1];
 		std::cout << var.getValue() << '\n';
 	}
 
-	Variable var = stack[operand1];
-	stack[operand2].setValue(var.getValue());
-	
+	const Variable var = varMap[operand1];
+	varMap[operand2].setValue(var.getValue());
 }
 
-void Opcode::add(std::string operand1, std::string modifier, std::string operand2)
+void Opcode::add(const std::string& operand1, const std::string& modifier, const std::string& operand2)
 {
 	if (modifier == "+") {
-		Variable var1 = stack[operand1];
-		Variable var2 = stack[operand2];
+		const Variable var1 = varMap[operand1];
+		Variable var2 = varMap[operand2];
 		var2.setValue(var1.getValue() + var2.getValue());
-		stack.erase(var2.getName());
-		stack.insert({ var2.getName(), var2 });
-	} else if (modifier == "-") {
-		Variable var1 = stack[operand1];
-		Variable var2 = stack[operand2];
-		var2.setValue(var1.getValue() - var2.getValue());
-		stack.erase(var2.getName());
-		stack.insert({ var2.getName(), var2 });
-	} else if (modifier == "*") {
-		Variable var1 = stack[operand1];
-		Variable var2 = stack[operand2];
-		var2.setValue(var1.getValue() * var2.getValue());
-		stack.erase(var2.getName());
-		stack.insert({ var2.getName(), var2 });
-	} else if (modifier == "/") {
-		Variable var1 = stack[operand1];
-		Variable var2 = stack[operand2];
-		var2.setValue(var1.getValue() / var2.getValue());
-		stack.erase(var2.getName());
-		stack.insert({ var2.getName(), var2 });
+		varMap.erase(var2.getName());
+		varMap.insert({ var2.getName(), var2 });
 	}
-	else {
-		exit(-1);
+	else if (modifier == "-") {
+		const Variable var1 = varMap[operand1];
+		Variable var2 = varMap[operand2];
+		var2.setValue(var1.getValue() - var2.getValue());
+		varMap.erase(var2.getName());
+		varMap.insert({ var2.getName(), var2 });
+	}
+	else if (modifier == "*") {
+		const Variable var1 = varMap[operand1];
+		Variable var2 = varMap[operand2];
+		var2.setValue(var1.getValue() * var2.getValue());
+		varMap.erase(var2.getName());
+		varMap.insert({ var2.getName(), var2 });
+	}
+	else if (modifier == "/") {
+		const Variable var1 = varMap[operand1];
+		Variable var2 = varMap[operand2];
+		var2.setValue(var1.getValue() / var2.getValue());
+		varMap.erase(var2.getName());
+		varMap.insert({ var2.getName(), var2 });
 	}
 }
 
-void Opcode::dword(std::string operand1, std::string modifier, std::string operand2)
+void Opcode::str(std::string operand1, const std::string& modifier, const std::string& operand2)
 {
 	if (modifier != "=")
-		exit(-1);
+		return;
 
-	std::vector<std::string> chars = split(operand2, ",");
+	const std::vector<std::string> chars = split(operand2, ",");
 	std::vector<char> export_e;
-	DWORD newString = DWORD(operand1, "");
-	dstack.insert({ newString.getName(), newString });
+	STR newString = STR(std::move(operand1), "");
+	str_varMap.insert({ newString.getName(), newString });
 
-	for (auto i : chars) {
-		Variable var = stack[i];
-		char j = char(var.getValue());
+	for (const auto& i : chars) {
+		Variable var = varMap[i];
+		char j = static_cast<char>(var.getValue());
 		export_e.push_back(j);
 	}
 
 	newString.setValue(export_e);
-	dstack.erase(newString.getName());
-	dstack.insert({ newString.getName(), newString });
+	str_varMap.erase(newString.getName());
+	str_varMap.insert({ newString.getName(), newString });
 }
 
-void Opcode::print(std::string operand1, std::string modifier, std::string operand2)
+void Opcode::print(const std::string& operand1, const std::string& modifier, const std::string operand2)
 {
 	if (modifier != "->")
-		exit(-1);
+		return;
 
 	if (operand2 == "STDOUT") {
-		DWORD var = dstack[operand1];
+		const STR var = str_varMap[operand1];
 		std::cout << var.getValue() << '\n';
 	}
 	else {
-		DWORD var = dstack[operand1];
+		const STR var = str_varMap[operand1];
 		std::ofstream output(operand2);
 		output << var.getValue() << '\n';
 	}
 }
 
-int Opcode::conditional(std::string operand1, std::string modifier)
+int Opcode::conditional(const std::string& operand1, const std::string& modifier)
 {
-	std::vector<std::string> statement = split(modifier, "=");
-	Variable var1 = stack[std::string(1, statement[0].at(0))];
-	Variable var2 = stack[statement[1]];
+	const std::vector<std::string> statement = split(modifier, "=");
+	const Variable var1 = varMap[std::string(1, statement[0].at(0))];
+	const Variable var2 = varMap[statement[1]];
 
 	try {
 		if (std::string(1, statement[0].at(1)) == "!") {
 			if (var1.getValue() != var2.getValue())
 				return NULL;
-			else
-				return stoi(operand1) + 1;
-		} else if (std::string(1, statement[0].at(1)) == "<") {
+			return stoi(operand1) + 1;
+		}
+
+		if (std::string(1, statement[0].at(1)) == "<") {
 			if (var1.getValue() <= var2.getValue())
 				return NULL;
-			else
-				return stoi(operand1) + 1;
+			return stoi(operand1) + 1;
 		}
-		else if (std::string(1, statement[0].at(1)) == ">") {
+
+		if (std::string(1, statement[0].at(1)) == ">") {
 			if (var1.getValue() >= var2.getValue())
 				return NULL;
-			else
-				return stoi(operand1) + 1;
+			return stoi(operand1) + 1;
 		}
 	}
-	catch (std::out_of_range e) {
+	catch (std::out_of_range& _) {
 		if (var1.getValue() == var2.getValue())
 			return NULL;
-		else
-			return stoi(operand1) + 1;
+		return stoi(operand1) + 1;
 	}
+
+	return NULL;
 }
 
-void Opcode::del(std::string operand1)
+void Opcode::del(const std::string& operand1)
 {
-	DWORD dword = dstack[operand1];
-	Variable var = stack[operand1];
-	dstack.erase(dword.getName());
-	stack.erase(var.getName());
+	const STR str = str_varMap[operand1];
+	const Variable var = varMap[operand1];
+	str_varMap.erase(str.getName());
+	varMap.erase(var.getName());
 }

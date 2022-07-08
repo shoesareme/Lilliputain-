@@ -30,7 +30,6 @@
     <ClCompile Include="variable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tokenizer.h">
@@ -42,22 +41,15 @@
     <ClInclude Include="variable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dword.h">
+    <ClInclude Include="str.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="counter.lp">
-      <Filter>Code Snippets</Filter>
-    </None>
-    <None Include="hello.lp">
-      <Filter>Code Snippets</Filter>
-    </None>
-    <None Include="conditionals.lp">
-      <Filter>Code Snippets</Filter>
-    </None>
-    <None Include="calculator.lp">
-      <Filter>Code Snippets</Filter>
-    </None>
+    <None Include="README.md" />
+    <None Include="Code Snippets\calculator.lp" />
+    <None Include="Code Snippets\conditionals.lp" />
+    <None Include="Code Snippets\counter.lp" />
+    <None Include="Code Snippets\hello.lp" />
   </ItemGroup>
 </Project>

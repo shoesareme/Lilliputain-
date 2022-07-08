@@ -3,21 +3,19 @@
 #include <string>
 #include <map>
 #include <iostream>
-#include <vector>
 #include <fstream>
-#include <chrono>
-#include <thread>
+#include <utility>
 
 #include "variable.h"
-#include "dword.h"
+#include "str.h"
 
 namespace Opcode
 {
-	void set(std::string operand1, std::string modifier, std::string operand2);
-	void move(std::string operand1, std::string modifier, std::string operand2);
-	void add(std::string operand1, std::string modifier, std::string operand2);
-	void dword(std::string operand1, std::string modifier, std::string operand2);
-	void print(std::string operand1, std::string modifier, std::string operand2);
-	int conditional(std::string operand1, std::string modifier);
-	void del(std::string operand1);
+	void set(std::string operand1, const std::string& modifier, const std::string& operand2);
+	void move(const std::string& operand1, const std::string& modifier, const std::string& operand2);
+	void add(const std::string& operand1, const std::string& modifier, const std::string& operand2);
+	void str(std::string operand1, const std::string& modifier, const std::string& operand2);
+	void print(const std::string& operand1, const std::string& modifier, std::string operand2);
+	int conditional(const std::string& operand1, const std::string& modifier);
+	void del(const std::string& operand1);
 }

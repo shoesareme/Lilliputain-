@@ -142,31 +142,24 @@
   <ItemGroup>
     <ClCompile Include="entrypoint.cpp" />
     <ClCompile Include="opcode.cpp" />
-    <ClCompile Include="README.md" />
     <ClCompile Include="tokenizer.cpp" />
     <ClCompile Include="variable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="calculator.lp" />
-    <None Include="conditionals.lp" />
-    <None Include="counter.lp" />
-    <None Include="hello.lp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="dword.h" />
     <ClInclude Include="opcode.h" />
+    <ClInclude Include="str.h" />
     <ClInclude Include="tokenizer.h" />
     <ClInclude Include="variable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Code Snippets\calculator.lp" />
+    <None Include="Code Snippets\conditionals.lp" />
+    <None Include="Code Snippets\counter.lp" />
+    <None Include="Code Snippets\hello.lp" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
-    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
-  </Target>
 </Project>
