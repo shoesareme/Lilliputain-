@@ -69,7 +69,7 @@ That is it for now, although Lilliputain is far from finished. Please report any
 | ARITH X ± Y | Performs arithmetic on X and Y and saves the results to Y. |
 | STR X = Y,Z | Creates a STR X and joins the ASCII values of Y and Z. |
 | PRINT X -> Y | Prints STR X into filename Y. |
-| CHECK 123 X=Y | If condition is met, run the next 123 lines and return back to main thread. Otherwise skip the next 123 lines. |
+| CHECK 123 X=Y | If condition is met, run the next 122 lines and return back to main thread. Otherwise skip the next 122 lines. |
 | JMP 123 | Jumps to line number 123. CAUTION: If left unhandled, it may cause infinite loops. |
 | DEL X | Deletes the variable X from scope entirely. |
 | INT 1234 | Pauses the thread for 1234 ms (milliseconds). |
