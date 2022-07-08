@@ -51,5 +51,6 @@
     <None Include="Code Snippets\conditionals.lp" />
     <None Include="Code Snippets\counter.lp" />
     <None Include="Code Snippets\hello.lp" />
+    <None Include="Code Snippets\fibonacci.lp" />
   </ItemGroup>
 </Project>
