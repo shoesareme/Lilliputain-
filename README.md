@@ -28,9 +28,9 @@ The default variable type is an integer. Strings do not exist in Lilliputain and
 Lilliputain supports IF statements and their behavior is very simple. The number proceeding immediately after the CHECK opcode displays how many lines after the original statement the IF statement should consider for. If the condition is not met, skip past the specified amount of lines MINUS ITSELF AS A LINE. Note the spaces between each segment. When using CHECK statements, both variables have to be a single character, comparing mutiple words (foo<=baz) is not allowed, instead use (f<=b). 
 
 ```
-CHECK 5 x=y // Equal to; Next 4 statements, inside IF block.
-CHECK 4 x!=y // NOT Equal to; Next 3 statements, inside IF block
-CHECK 6 x<=y // Less than equal to; Next 5 statements, inside IF block
+CHECK 5 x=y // Equal to; Next 5 statements, inside IF block.
+CHECK 4 x!=y // NOT Equal to; Next 4 statements, inside IF block
+CHECK 6 x<=y // Less than equal to; Next 6 statements, inside IF block
 ```
 Jump statements are also included in the language and it only has one operand that you can modify:
 
@@ -69,7 +69,7 @@ That is it for now, although Lilliputain is far from finished. Please report any
 | ARITH X ± Y | Performs arithmetic on X and Y and saves the results to Y. |
 | STR X = Y,Z | Creates a STR X and joins the ASCII values of Y and Z. |
 | PRINT X -> Y | Prints STR X into filename Y. |
-| CHECK 123 X=Y | If condition is met, run the next 122 lines and return back to main thread. Otherwise skip the next 122 lines. |
+| CHECK 123 X=Y | If condition is met, run the next 123 lines and return back to main thread. Otherwise skip the next 123 lines. |
 | JMP 123 | Jumps to line number 123. CAUTION: If left unhandled, it may cause infinite loops. |
 | DEL X | Deletes the variable X from scope entirely. |
 | INT 1234 | Pauses the thread for 1234 ms (milliseconds). |
